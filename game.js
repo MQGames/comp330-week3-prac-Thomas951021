@@ -121,20 +121,6 @@ function main() {
 
     
 
-    let resizeCanvas = function () {
-        const resolution = window.devicePixelRatio || 1.0;
-        const displayWidth = Math.floor(canvas.clientWidth * resolution);
-        const displayHeight = Math.floor(canvas.clientHeight * resolution);
-
-        if(canvas.width !== displayWidth || canvas.height !== displayHeight){
-            canvas.width = canvas.clientWidth;
-            canvas.height = canvas.clientHeight;
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     let oldTime = 0;
     let animate = function(time){
         time = time/1000; //convert to seconds;
@@ -146,6 +132,8 @@ function main() {
         render();
         requestAnimationFrame(animate);
     }
+    animat();
+
 
     // === Per Frame operations ===
     let angle = 0;
@@ -161,26 +149,40 @@ function main() {
         }
     };
 
-    let render = function() {
-        // clear the screen
-        gl.viewport(0, 0, canvas.width, canvas.height);        
-        gl.clearColor(0, 0, 0, 1);
-        gl.clear(gl.COLOR_BUFFER_BIT);
-
-        // pass the rotation angle in as a uniform
-        gl.uniform1f(rotationUniform, angle);
-
-        // pass the translation in as a uniform
-        gl.uniform2f(translationUniform, dx, dy);
-
-        let sx = 2 * resizeCanvas.resolution / canvas.width;
-        let sy = 2 * resizeCanvas.resolution / canvas.height;
-        gl.uniform2f(scaleUniform, sx, sy);
-
-        // draw a triangle
-        gl.drawArrays(gl.TRIANGLES, 0, shape.length/2);   
-    };
-
     render();
 }    
+
+let render = function() {
+    // clear the screen
+    gl.viewport(0, 0, canvas.width, canvas.height);        
+    gl.clearColor(0, 0, 0, 1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    // pass the rotation angle in as a uniform
+    gl.uniform1f(rotationUniform, angle);
+
+    // pass the translation in as a uniform
+    gl.uniform2f(translationUniform, dx, dy);
+
+    let sx = 2 * resizeCanvas.resolution / canvas.width;
+    let sy = 2 * resizeCanvas.resolution / canvas.height;
+    gl.uniform2f(scaleUniform, sx, sy);
+
+    // draw a triangle
+    gl.drawArrays(gl.TRIANGLES, 0, shape.length/2);   
+};
+
+let resizeCanvas = function () {
+    const resolution = window.devicePixelRatio || 1.0;
+    const displayWidth = Math.floor(canvas.clientWidth * resolution);
+    const displayHeight = Math.floor(canvas.clientHeight * resolution);
+
+    if(canvas.width !== displayWidth || canvas.height !== displayHeight){
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+        return true;
+    } else {
+        return false;
+    }
+}
 
